@@ -1,10 +1,5 @@
 from abc import ABC, abstractmethod
-from enum import Enum
-
-class UnitType(Enum):
-    PIKEMAN = "Pikeman"
-    ARCHER = "Archer"
-    KNIGHT = "Knight"
+from .enums import UnitType
 
 class Unit(ABC):
     
@@ -15,12 +10,6 @@ class Unit(ABC):
 
     def __str__(self):
         return "{0}: Strength points: {1}, Age: {2}".format(self.unit_type.value, self.strength, self.age)
-
-    # def get_age(self) -> int:
-    #     return self.age
-    
-    # def get_strength(self) -> int:
-    #     return self.strength
     
     @abstractmethod
     def train(self):
@@ -34,46 +23,43 @@ class Knight(Unit):
 
     TRAINING_COST: int = 30
 
+    def __init__(self, strength: int = 20, age: int = 18):
+        super().__init__(strength, UnitType.KNIGHT, age)
+    
     def train(self):
         self.strength += 10
     
-    def get_transformation_cost(self):
-        return "This unit can't be transformed."
-    
     def transform(self):
-        return "This unit can't be transformed."
+        raise NotImplementedError("Knight cannot be transformed")
             
 class Archer(Unit):
     
     TRAINING_COST: int = 20
     TRANSFORMATION_COST: int = 40
 
+    def __init__(self, strength: int = 10, age: int = 18):
+        super().__init__(strength, UnitType.ARCHER, age)
+
     def train(self):
         self.strength += 7
 
-    def get_transformation_cost(self) -> int:
-        return 40
-    
     def transform(self) -> Knight:
-        return Knight(self.strength if (self.strength > 20) else 20, UnitType.KNIGHT, self.age)
+        return Knight(max(self.strength, 20), self.age)
 
     
 class Pikeman(Unit):
 
     TRAINING_COST: int = 10
     TRANSFORMATION_COST: int = 30
-
-    def get_training_cost(self) -> int:
-        return 10
+    
+    def __init__(self, strength: int = 5, age: int = 18):
+        super().__init__(strength, UnitType.PIKEMAN, age)
     
     def train(self):
         self.strength += 3
-
-    def get_transformation_cost(self) -> int:
-        return 30
     
     def transform(self):
-        return Archer(self.strength if (self.strength > 10) else 10, UnitType.ARCHER, self.age)
+        return Archer(max(self.strength, 10), self.age)
 
 
     
