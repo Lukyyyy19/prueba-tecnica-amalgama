@@ -25,7 +25,10 @@ ingleses.attack(chinos)
 #     ingleses.army_units[UnitType.ARCHER][0].train(ingleses)  
 print(ingleses.gold_coins)
 ingleses.army_units[UnitType.ARCHER][0].train()
-#ingleses.army_units[UnitType.ARCHER][0].transform()
+xd = ingleses.army_units[UnitType.ARCHER][0].transform()
+
+print(xd)
+
 #ingleses.army_units[UnitType.PIKEMAN][0].transform()
 print(ingleses.army_units[UnitType.ARCHER][0].strength)
 chinos.attack(ingleses)

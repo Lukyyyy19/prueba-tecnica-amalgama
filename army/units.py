@@ -22,11 +22,14 @@ class Unit(ABC):
         return self.army.remove_gold_coins(self.TRAINING_COST)
         pass
 
+class TransformableUnit(Unit):
+    
     @abstractmethod
     def transform(self):
         return self.army.remove_gold_coins(self.TRANSFORMATION_COST)
         pass
-    
+
+
 class Knight(Unit):
 
 
@@ -39,11 +42,8 @@ class Knight(Unit):
             return False
         self.strength += 10
         return True
-    
-    def transform(self):
-        raise NotImplementedError("Knight cannot be transformed")
             
-class Archer(Unit):
+class Archer(TransformableUnit):
     
     TRAINING_COST: int = 20
     TRANSFORMATION_COST: int = 40
@@ -67,7 +67,7 @@ class Archer(Unit):
 
 
     
-class Pikeman(Unit):
+class Pikeman(TransformableUnit):
 
     TRAINING_COST: int = 10
     TRANSFORMATION_COST: int = 30
