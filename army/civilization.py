@@ -1,22 +1,21 @@
 from abc import ABC, abstractmethod
 from .units import Unit, Pikeman, Archer, Knight
 from .enums import CivilizationType, UnitType
-
+from .battle import Battle, BattleInfo
 
 class Army(ABC):
     
     def __init__(self, civilization_type: CivilizationType):
         self.gold_coins = 1000
         self.civilization_type = civilization_type
-        self.battle_history: list["BattleInfo"] = []
+        self.battle_history: list[BattleInfo] = []
         self.army_units: dict[UnitType, list[Unit]] = {
             UnitType.PIKEMAN: [],
             UnitType.ARCHER: [],
             UnitType.KNIGHT: []
         }
 
-    def attack(self, other: 'Army'):
-        from .battle import Battle
+    def attack(self, other: "Army"):
         battle: Battle = Battle(self, other)
 
     def remove_strongest_unit(self):
@@ -47,26 +46,37 @@ class Army(ABC):
     def add_battle_info(self, battle_info):
         self.battle_history.append(battle_info)
 
+    def create_units(self, unit_type: UnitType, quantity: int):
+        match unit_type:
+            case UnitType.PIKEMAN:
+                self.army_units[UnitType.PIKEMAN] += [Pikeman(self) for _ in range(quantity)]
+            case UnitType.ARCHER:
+                self.army_units[UnitType.ARCHER] += [Archer(self) for _ in range(quantity)]
+            case UnitType.KNIGHT:
+                self.army_units[UnitType.KNIGHT] += [Knight(self) for _ in range(quantity)]
+
+
+
 class ChineseArmy(Army):
 
     def __init__(self):
         super().__init__(CivilizationType.CHINESE)
-        self.army_units[UnitType.PIKEMAN] += [Pikeman() for _ in range(2)]
-        self.army_units[UnitType.ARCHER] += [Archer() for _ in range(25)]
-        self.army_units[UnitType.KNIGHT] += [Knight() for _ in range(2)]
+        self.create_units(UnitType.PIKEMAN,2)
+        self.create_units(UnitType.ARCHER,25)
+        self.create_units(UnitType.KNIGHT,2)
 
 class EnglishArmy(Army):
     
     def __init__(self):
         super().__init__(CivilizationType.ENGLISH)
-        self.army_units[UnitType.PIKEMAN] += [Pikeman() for _ in range(10)]
-        self.army_units[UnitType.ARCHER] += [Archer() for _ in range(10)]
-        self.army_units[UnitType.KNIGHT] += [Knight() for _ in range(10)]
+        self.create_units(UnitType.PIKEMAN,10)
+        self.create_units(UnitType.ARCHER,10)
+        self.create_units(UnitType.KNIGHT,10)
 
 class ByzantineArmy(Army):
 
     def __init__(self):
         super().__init__(CivilizationType.BYZANTINE)
-        self.army_units[UnitType.PIKEMAN] += [Pikeman() for _ in range(5)]
-        self.army_units[UnitType.ARCHER] += [Archer() for _ in range(8)]
-        self.army_units[UnitType.KNIGHT] += [Knight() for _ in range(15)]
+        self.create_units(UnitType.PIKEMAN,5)
+        self.create_units(UnitType.ARCHER,8)
+        self.create_units(UnitType.KNIGHT,15)

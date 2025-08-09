@@ -1,20 +1,23 @@
-from .civilization import Army
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from.civilization import Army
 
 class Battle:
     
-    winner: Army = None
-    loser: Army = None
+    winner: "Army"
+    loser: "Army"
 
     GOLD_COINS_REWARD = 100
-    LOSER_UNITS_REMOVED = 2
+    LOSER_UNITS_REMOVE = 2
 
-    def __init__(self, attacker: Army, defender: Army):
+    def __init__(self, attacker: "Army", defender: "Army"):
         self.attacker = attacker
         self.defender = defender
         self.resolve_battle()
 
-    def calculate_points(self, army: Army) -> int:
+    def calculate_points(self, army: "Army") -> int:
         points: int = 0
         for unit in army.army_units.values():
             points += sum(u.strength for u in unit)
@@ -38,18 +41,18 @@ class Battle:
             self.defender.remove_weakest_unit()
             return
 
-        for _ in range(self.LOSER_UNITS_REMOVED):
+        for _ in range(self.LOSER_UNITS_REMOVE):
             self.loser.remove_strongest_unit()
         self.winner.add_gold_coins(self.GOLD_COINS_REWARD)
         battle_info = BattleInfo(self.attacker, self.defender, attacker_points, defender_points, self.winner)
         self.attacker.add_battle_info(battle_info)
-        self.loser.add_battle_info(battle_info)
+        self.defender.add_battle_info(battle_info)
 
 @dataclass
 class BattleInfo:
-    attacker: Army
-    defender: Army
+    attacker: "Army"
+    defender: "Army"
     attacker_points: int
     defender_points: int
-    winner: Army
+    winner: "Army"
     
