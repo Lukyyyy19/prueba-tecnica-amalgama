@@ -1,13 +1,13 @@
 from army.units import Pikeman, Archer, Knight
 from army.civilization import ChineseArmy, EnglishArmy
-
+from army.enums import *
 pikeman = Pikeman(5)
 archer = Archer(10)
 knight = Knight(20)
 print(archer)
 print(pikeman)
 print(knight)
-archer.train()
+#archer.train()
 print(archer)
 new_knight = archer.transform()
 print(new_knight)
@@ -21,5 +21,8 @@ for t, u in chinos.army_units.items():
         print(unit)
 
 ingleses.attack(chinos)
-
-print(ingleses.battle_history[0].winner.civilization_type)
+for i in range(1000):
+    ingleses.army_units[UnitType.ARCHER][0].train(ingleses)  
+  
+print(ingleses.army_units[UnitType.ARCHER][0].strength)
+print(ingleses.gold_coins)

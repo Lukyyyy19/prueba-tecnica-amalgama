@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-
-
 from .units import Unit, Pikeman, Archer, Knight
 from .enums import CivilizationType, UnitType
 
@@ -10,7 +8,7 @@ class Army(ABC):
     def __init__(self, civilization_type: CivilizationType):
         self.gold_coins = 1000
         self.civilization_type = civilization_type
-        self.battle_history: list = []
+        self.battle_history: list["BattleInfo"] = []
         self.army_units: dict[UnitType, list[Unit]] = {
             UnitType.PIKEMAN: [],
             UnitType.ARCHER: [],
@@ -20,8 +18,6 @@ class Army(ABC):
     def attack(self, other: 'Army'):
         from .battle import Battle
         battle: Battle = Battle(self, other)
-        self.battle_history.append(battle)
-        other.battle_history.append(battle)
 
     def remove_strongest_unit(self):
         strongest_unit: Unit = self.army_units[UnitType.PIKEMAN][0]
@@ -41,6 +37,15 @@ class Army(ABC):
 
     def add_gold_coins(self, amount: int):
         self.gold_coins += amount
+    
+    def remove_gold_coins(self, amount: int)->bool:
+        if(amount>self.gold_coins):
+            return False
+        self.gold_coins-=amount
+        return True
+    
+    def add_battle_info(self, battle_info):
+        self.battle_history.append(battle_info)
 
 class ChineseArmy(Army):
 
